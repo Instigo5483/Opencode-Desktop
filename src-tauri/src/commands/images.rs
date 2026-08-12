@@ -28,7 +28,9 @@ pub async fn save_clipboard_image(
 }
 
 #[tauri::command]
-pub async fn list_attachments(app: tauri::AppHandle) -> Result<Vec<crate::db::types::AttachmentInfo>, String> {
+pub async fn list_attachments(
+    app: tauri::AppHandle,
+) -> Result<Vec<crate::db::types::AttachmentInfo>, String> {
     let manager = AttachmentManager::new(&app).map_err(|e| e.to_string())?;
     manager.list_attachments().map_err(|e| e.to_string())
 }
@@ -36,13 +38,20 @@ pub async fn list_attachments(app: tauri::AppHandle) -> Result<Vec<crate::db::ty
 #[tauri::command]
 pub async fn delete_attachment(app: tauri::AppHandle, attachment_id: String) -> Result<(), String> {
     let manager = AttachmentManager::new(&app).map_err(|e| e.to_string())?;
-    manager.delete_attachment(&attachment_id).map_err(|e| e.to_string())
+    manager
+        .delete_attachment(&attachment_id)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]
-pub async fn cleanup_old_attachments(app: tauri::AppHandle, max_age_hours: u64) -> Result<u32, String> {
+pub async fn cleanup_old_attachments(
+    app: tauri::AppHandle,
+    max_age_hours: u64,
+) -> Result<u32, String> {
     let manager = AttachmentManager::new(&app).map_err(|e| e.to_string())?;
-    manager.cleanup_old(max_age_hours).map_err(|e| e.to_string())
+    manager
+        .cleanup_old(max_age_hours)
+        .map_err(|e| e.to_string())
 }
 
 #[tauri::command]

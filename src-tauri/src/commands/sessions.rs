@@ -63,10 +63,7 @@ pub fn rename_session(
 }
 
 #[tauri::command]
-pub fn delete_session(
-    state: tauri::State<'_, Database>,
-    session_id: String,
-) -> Result<(), String> {
+pub fn delete_session(state: tauri::State<'_, Database>, session_id: String) -> Result<(), String> {
     state.delete_session(&session_id)
 }
 

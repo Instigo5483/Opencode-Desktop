@@ -58,7 +58,9 @@ pub async fn send_prompt(
         cmd.current_dir(dir);
     }
 
-    let mut child = cmd.spawn().map_err(|e| format!("Failed to spawn opencode: {}", e))?;
+    let mut child = cmd
+        .spawn()
+        .map_err(|e| format!("Failed to spawn opencode: {}", e))?;
 
     let stdout = child.stdout.take().ok_or("Failed to capture stdout")?;
     let reader = BufReader::new(stdout);

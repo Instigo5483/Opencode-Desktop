@@ -26,8 +26,7 @@ impl Database {
 
         let conn = Connection::open_with_flags(
             db_path,
-            rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE
-                | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX,
+            rusqlite::OpenFlags::SQLITE_OPEN_READ_WRITE | rusqlite::OpenFlags::SQLITE_OPEN_NO_MUTEX,
         )
         .map_err(|e| format!("Failed to open database: {}", e))?;
 
@@ -62,9 +61,5 @@ impl Database {
             db_path.display(),
             fallback.display()
         ))
-    }
-
-    pub fn is_available() -> bool {
-        Self::db_path().is_ok()
     }
 }

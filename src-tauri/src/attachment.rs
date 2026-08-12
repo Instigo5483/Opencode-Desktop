@@ -80,8 +80,8 @@ impl AttachmentManager {
             return Ok(attachments);
         }
 
-        let entries =
-            fs::read_dir(&self.attachments_dir).map_err(|e| format!("Failed to read dir: {}", e))?;
+        let entries = fs::read_dir(&self.attachments_dir)
+            .map_err(|e| format!("Failed to read dir: {}", e))?;
 
         for entry in entries.filter_map(|e| e.ok()) {
             let path = entry.path();
@@ -109,8 +109,8 @@ impl AttachmentManager {
     }
 
     pub fn delete_attachment(&self, attachment_id: &str) -> Result<(), String> {
-        let entries =
-            fs::read_dir(&self.attachments_dir).map_err(|e| format!("Failed to read dir: {}", e))?;
+        let entries = fs::read_dir(&self.attachments_dir)
+            .map_err(|e| format!("Failed to read dir: {}", e))?;
 
         for entry in entries.filter_map(|e| e.ok()) {
             let path = entry.path();
@@ -138,8 +138,8 @@ impl AttachmentManager {
             return Ok(0);
         }
 
-        let entries =
-            fs::read_dir(&self.attachments_dir).map_err(|e| format!("Failed to read dir: {}", e))?;
+        let entries = fs::read_dir(&self.attachments_dir)
+            .map_err(|e| format!("Failed to read dir: {}", e))?;
 
         for entry in entries.filter_map(|e| e.ok()) {
             let path = entry.path();

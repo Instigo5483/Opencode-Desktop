@@ -217,20 +217,32 @@ impl Database {
             .map_err(|e| e.to_string())?;
 
         // Delete session shares
-        conn.execute("DELETE FROM session_share WHERE session_id = ?1", [session_id])
-            .map_err(|e| e.to_string())?;
+        conn.execute(
+            "DELETE FROM session_share WHERE session_id = ?1",
+            [session_id],
+        )
+        .map_err(|e| e.to_string())?;
 
         // Delete session context epoch
-        conn.execute("DELETE FROM session_context_epoch WHERE session_id = ?1", [session_id])
-            .map_err(|e| e.to_string())?;
+        conn.execute(
+            "DELETE FROM session_context_epoch WHERE session_id = ?1",
+            [session_id],
+        )
+        .map_err(|e| e.to_string())?;
 
         // Delete session input
-        conn.execute("DELETE FROM session_input WHERE session_id = ?1", [session_id])
-            .map_err(|e| e.to_string())?;
+        conn.execute(
+            "DELETE FROM session_input WHERE session_id = ?1",
+            [session_id],
+        )
+        .map_err(|e| e.to_string())?;
 
         // Delete session messages (v2)
-        conn.execute("DELETE FROM session_message WHERE session_id = ?1", [session_id])
-            .map_err(|e| e.to_string())?;
+        conn.execute(
+            "DELETE FROM session_message WHERE session_id = ?1",
+            [session_id],
+        )
+        .map_err(|e| e.to_string())?;
 
         // Delete the session itself
         let rows = conn

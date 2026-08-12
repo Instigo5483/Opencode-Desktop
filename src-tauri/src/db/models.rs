@@ -57,11 +57,11 @@ pub fn list_available_models() -> Result<Vec<ModelEntry>, String> {
         return Err(format!("Models cache not found at: {}", path.display()));
     }
 
-    let content =
-        std::fs::read_to_string(&path).map_err(|e| format!("Failed to read models cache: {}", e))?;
+    let content = std::fs::read_to_string(&path)
+        .map_err(|e| format!("Failed to read models cache: {}", e))?;
 
-    let providers: HashMap<String, Provider> =
-        serde_json::from_str(&content).map_err(|e| format!("Failed to parse models cache: {}", e))?;
+    let providers: HashMap<String, Provider> = serde_json::from_str(&content)
+        .map_err(|e| format!("Failed to parse models cache: {}", e))?;
 
     let mut models: Vec<ModelEntry> = Vec::new();
 
@@ -95,12 +95,13 @@ pub fn get_current_model() -> Result<Option<String>, String> {
     let content =
         std::fs::read_to_string(&path).map_err(|e| format!("Failed to read model state: {}", e))?;
 
-    let state: ModelState =
-        serde_json::from_str(&content).map_err(|e| format!("Failed to parse model state: {}", e))?;
+    let state: ModelState = serde_json::from_str(&content)
+        .map_err(|e| format!("Failed to parse model state: {}", e))?;
 
-    Ok(state.recent.first().map(|m| {
-        format!("{}/{}", m.provider_id, m.model_id)
-    }))
+    Ok(state
+        .recent
+        .first()
+        .map(|m| format!("{}/{}", m.provider_id, m.model_id)))
 }
 
 pub fn get_models_for_provider(provider_id: &str) -> Result<Vec<ModelEntry>, String> {
@@ -110,11 +111,11 @@ pub fn get_models_for_provider(provider_id: &str) -> Result<Vec<ModelEntry>, Str
         return Err(format!("Models cache not found at: {}", path.display()));
     }
 
-    let content =
-        std::fs::read_to_string(&path).map_err(|e| format!("Failed to read models cache: {}", e))?;
+    let content = std::fs::read_to_string(&path)
+        .map_err(|e| format!("Failed to read models cache: {}", e))?;
 
-    let providers: HashMap<String, Provider> =
-        serde_json::from_str(&content).map_err(|e| format!("Failed to parse models cache: {}", e))?;
+    let providers: HashMap<String, Provider> = serde_json::from_str(&content)
+        .map_err(|e| format!("Failed to parse models cache: {}", e))?;
 
     let mut models: Vec<ModelEntry> = Vec::new();
 
