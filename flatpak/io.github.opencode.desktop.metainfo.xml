@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>io.github.opencode.desktop</id>
+  <name>OpenCode Desktop</name>
+  <summary>A desktop GUI wrapper for OpenCode</summary>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>MIT</project_license>
+  <developer id="io.github.opencode">
+    <name>OpenCode Desktop Contributors</name>
+  </developer>
+
+  <description>
+    <p>
+      OpenCode Desktop provides a modern graphical interface for OpenCode,
+      the AI-powered coding assistant. Browse existing sessions, create new
+      conversations with image attachments, and manage your projects — all
+      from a native Linux desktop application.
+    </p>
+    <p>Features:</p>
+    <ul>
+      <li>Browse and search OpenCode session history</li>
+      <li>Create new sessions with image paste (Ctrl+V) and drag-and-drop</li>
+      <li>Project folder management with create/select support</li>
+      <li>Tool call visualization with expandable details</li>
+      <li>System theme integration (dark/light mode)</li>
+    </ul>
+  </description>
+
+  <launchable type="desktop-id">io.github.opencode.desktop.desktop</launchable>
+
+  <url type="homepage">https://github.com/opencode-desktop/opencode-desktop</url>
+  <url type="bugtracker">https://github.com/opencode-desktop/opencode-desktop/issues</url>
+
+  <content_rating type="oars-1.1" />
+
+  <releases>
+    <release version="0.1.0" date="2026-08-12">
+      <description>
+        <p>Initial release of OpenCode Desktop.</p>
+      </description>
+    </release>
+  </releases>
+
+  <requires>
+    <control>pointing</control>
+    <control>keyboard</control>
+  </requires>
+
+  <supports>
+    <display_length compare="ge">768</display_length>
+  </supports>
+</component>

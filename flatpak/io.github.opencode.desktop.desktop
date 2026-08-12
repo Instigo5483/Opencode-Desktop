@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=OpenCode Desktop
+Comment=A desktop GUI wrapper for OpenCode
+Exec=opencode-desktop
+Icon=io.github.opencode.desktop
+Terminal=false
+Type=Application
+Categories=Development;IDE;Programming;
+Keywords=opencode;ai;coding;development;
+StartupWMClass=opencode-desktop

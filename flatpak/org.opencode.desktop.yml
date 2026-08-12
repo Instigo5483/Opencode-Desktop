@@ -1,0 +1,75 @@
+app-id: io.github.opencode.desktop
+runtime: org.gnome.Platform
+runtime-version: '47'
+sdk: org.gnome.Sdk
+command: opencode-desktop
+
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --socket=x11
+  - --device=dri
+  - --share=ipc
+  - --share=network
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --talk-name=org.freedesktop.Notifications
+  # Access to OpenCode data directories
+  - --filesystem=xdg-data/opencode:ro
+  - --filesystem=xdg-config/opencode:ro
+  - --filesystem=home:ro
+  # For spawning opencode CLI
+  - --talk-name=org.freedesktop.portal.Flatpak
+  - --env=PATH=/app/bin:/app/extensions/rust-stable/bin:/usr/bin
+
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
+  - org.freedesktop.Sdk.Extension.node20
+
+build-options:
+  append-path: /usr/lib/sdk/rust-stable/bin:/usr/lib/sdk/node20/bin
+  env:
+    CARGO_HOME: /run/build/opencode-desktop/cargo
+    npm_config_offline: 'true'
+
+modules:
+  - name: opencode-desktop
+    buildsystem: simple
+    sources:
+      - type: dir
+        path: ..
+      - cargo-sources.json
+      - npm-sources.json
+
+    build-commands:
+      # Configure Cargo for offline builds
+      - mkdir -p src-tauri/.cargo
+      - |
+        cat > src-tauri/.cargo/config.toml << 'EOF'
+        [source.crates-io]
+        replace-with = "vendored-sources"
+
+        [source.vendored-sources]
+        directory = "/run/build/opencode-desktop/cargo/vendor"
+        EOF
+
+      # Install npm dependencies offline
+      - npm install --offline
+
+      # Build the frontend
+      - npm run build
+
+      # Build the Tauri app
+      - npx tauri build -- --no-bundle
+
+      # Install the binary
+      - install -Dm755 src-tauri/target/release/opencode-desktop /app/bin/opencode-desktop
+
+      # Install desktop file
+      - install -Dm644 flatpak/io.github.opencode.desktop.desktop /app/share/applications/io.github.opencode.desktop.desktop
+
+      # Install icon
+      - install -Dm644 src-tauri/icons/128x128.png /app/share/icons/hicolor/128x128/apps/io.github.opencode.desktop.png
+      - install -Dm644 src-tauri/icons/128x128@2x.png /app/share/icons/hicolor/256x256/apps/io.github.opencode.desktop.png
+
+      # Install metainfo
+      - install -Dm644 flatpak/io.github.opencode.desktop.metainfo.xml /app/share/metainfo/io.github.opencode.desktop.metainfo.xml
