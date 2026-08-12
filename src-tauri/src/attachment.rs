@@ -54,8 +54,6 @@ impl AttachmentManager {
         let saved_name = format!("{}.png", id);
         let path = self.attachments_dir.join(&saved_name);
 
-        // Convert RGBA to PNG using a simple raw encoder
-        // RGBA data is width * height * 4 bytes
         let expected_len = (width * height * 4) as usize;
         if rgba_data.len() != expected_len {
             return Err(format!(
@@ -65,10 +63,10 @@ impl AttachmentManager {
             ));
         }
 
-        // Write as raw PNG using the image crate approach
-        // For simplicity, we'll write the raw RGBA and let the frontend handle display
-        // In production, use the `image` crate to encode properly
-        fs::write(&path, rgba_data).map_err(|e| format!("Failed to write image: {}", e))?;
+        let img = image::RgbaImage::from_raw(width, height, rgba_data.to_vec())
+            .ok_or("Failed to create RGBA image from raw data")?;
+        img.save(&path)
+            .map_err(|e| format!("Failed to encode PNG: {}", e))?;
 
         Ok(path.to_string_lossy().to_string())
     }

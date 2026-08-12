@@ -4,21 +4,6 @@ import { saveImageAttachment } from "../lib/commands";
 
 export function useClipboardImage() {
   const [pendingImages, setPendingImages] = useState<PendingAttachment[]>([]);
-  const [pasting, setPasting] = useState(false);
-
-  const addImageFromClipboard = useCallback(async () => {
-    try {
-      setPasting(true);
-
-      // Try to read image from clipboard via Tauri
-      // The actual clipboard read happens in the paste event handler
-      // This hook manages the state of pending images
-    } catch (err) {
-      console.error("Failed to read clipboard image:", err);
-    } finally {
-      setPasting(false);
-    }
-  }, []);
 
   const addImageFromFile = useCallback(async (file: File) => {
     const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
@@ -34,23 +19,15 @@ export function useClipboardImage() {
     return pending;
   }, []);
 
-  const addImageFromBytes = useCallback(
-    async (bytes: number[], filename: string) => {
+  const addImageFromPath = useCallback(
+    (filename: string, savedPath: string, previewUrl: string) => {
       const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-
-      // Save to backend
-      const info = await saveImageAttachment(bytes, filename);
-
-      const blob = new Blob([new Uint8Array(bytes)]);
-      const previewUrl = URL.createObjectURL(blob);
-
       const pending: PendingAttachment = {
         id,
-        file: new File([blob], filename),
+        file: new File([], filename),
         previewUrl,
-        savedPath: info.path,
+        savedPath,
       };
-
       setPendingImages((prev) => [...prev, pending]);
       return pending;
     },
@@ -95,10 +72,8 @@ export function useClipboardImage() {
 
   return {
     pendingImages,
-    pasting,
     addImageFromFile,
-    addImageFromBytes,
-    addImageFromClipboard,
+    addImageFromPath,
     removeImage,
     clearAll,
     saveAllPending,

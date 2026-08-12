@@ -110,9 +110,7 @@ pub struct SpawnResult {
 }
 
 fn find_opencode_binary() -> Result<String, String> {
-    // Check common locations
     let candidates = [
-        "opencode".to_string(),
         "/usr/local/bin/opencode".to_string(),
         "/usr/bin/opencode".to_string(),
         dirs::home_dir()

@@ -10,6 +10,7 @@ import { useClipboardImage } from "./hooks/useClipboardImage";
 import { useDragDrop } from "./hooks/useDragDrop";
 import { useProjectFolder } from "./hooks/useProjectFolder";
 import { sendPrompt } from "./lib/commands";
+import { convertFileSrc } from "@tauri-apps/api/core";
 
 export default function App() {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
@@ -39,7 +40,7 @@ export default function App() {
   const {
     pendingImages,
     addImageFromFile,
-    addImageFromBytes,
+    addImageFromPath,
     removeImage,
     clearAll: clearPendingImages,
     saveAllPending,
@@ -55,14 +56,13 @@ export default function App() {
     if (droppedFiles.length > 0) {
       for (const file of droppedFiles) {
         if (file.savedPath) {
-          addImageFromBytes([], file.file.name).then((pending) => {
-            pending.savedPath = file.savedPath;
-          });
+          const filename = file.file.name || file.savedPath.split("/").pop() || "image.png";
+          addImageFromPath(filename, file.savedPath, convertFileSrc(file.savedPath));
         }
       }
       clearDroppedFiles();
     }
-  }, [droppedFiles, clearDroppedFiles, addImageFromBytes]);
+  }, [droppedFiles, clearDroppedFiles, addImageFromPath]);
 
   const handleSessionSelect = useCallback(
     (sessionId: string) => {

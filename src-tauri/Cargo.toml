@@ -26,7 +26,7 @@ dirs = "5"
 uuid = { version = "1", features = ["v4"] }
 base64 = "0.22"
 tokio = { version = "1", features = ["full"] }
-chrono = { version = "0.4", features = ["serde"] }
+image = "0.25"
 
 [profile.release]
 strip = true

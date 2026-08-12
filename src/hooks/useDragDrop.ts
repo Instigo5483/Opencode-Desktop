@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
+import { convertFileSrc } from "@tauri-apps/api/core";
 import type { PendingAttachment } from "../lib/types";
 
 export function useDragDrop() {
@@ -25,7 +26,7 @@ export function useDragDrop() {
             const id = `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
             // Create a preview URL from the file path
-            const previewUrl = `asset://localhost/${filePath}`;
+            const previewUrl = convertFileSrc(filePath);
 
             const pending: PendingAttachment = {
               id,

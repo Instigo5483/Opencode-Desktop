@@ -24,7 +24,7 @@ Thumbs.db
 
 # OS
 *.DS_Store
-*. thumbs.db
+Thumbs.db
 
 # Debug
 npm-debug.log*
@@ -48,5 +48,3 @@ flatpak/repo/
 # Misc
 *.log
 .cache/
-pnpm-lock.yaml
-pnpm-workspace.yaml

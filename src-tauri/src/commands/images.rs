@@ -58,5 +58,21 @@ pub async fn cleanup_old_attachments(
 pub fn image_to_base64(path: String) -> Result<String, String> {
     let data = std::fs::read(&path).map_err(|e| format!("Failed to read image: {}", e))?;
     let encoded = base64::engine::general_purpose::STANDARD.encode(&data);
-    Ok(format!("data:image/png;base64,{}", encoded))
+
+    let mime = match path
+        .rsplit('.')
+        .next()
+        .unwrap_or("")
+        .to_lowercase()
+        .as_str()
+    {
+        "jpg" | "jpeg" => "image/jpeg",
+        "gif" => "image/gif",
+        "webp" => "image/webp",
+        "bmp" => "image/bmp",
+        "svg" => "image/svg+xml",
+        _ => "image/png",
+    };
+
+    Ok(format!("data:{};base64,{}", mime, encoded))
 }
