@@ -96,28 +96,28 @@ flatpak-builder --force-clean --user --repo=repo --install builddir flatpak/org.
 ## Architecture
 
 ```
-┌─────────────┬──────────────────────────────────────┐
+┌──────────────┬───────────────────────────────────────┐
 │  Sidebar     │  ChatArea                             │
 │  (280px)     │  (flex-1)                             │
 │              │                                       │
-│  [🔍 Search] │  ┌─ MessageBubble (user) ──────────┐ │
-│              │  │ "What does this code do?"         │ │
+│  [🔍 Search] │  ┌─ MessageBubble (user) ───────────┐ │
+│              │  │ "What does this code do?"        │ │
 │  Session 1   │  └──────────────────────────────────┘ │
 │  Session 2   │  ┌─ MessageBubble (assistant) ──────┐ │
 │  Session 3   │  │ "This code reads a file..."      │ │
-│              │  │ [▶ 2 tool calls]                  │ │
-│              │  │   └ read_file: {path: "..."}      │ │
+│              │  │ [▶ 2 tool calls]                │ │
+│              │  │   └ read_file: {path: "..."}     │ │
 │              │  └──────────────────────────────────┘ │
 │              │                                       │
-│              ├──────────────────────────────────────┤
+│              ├───────────────────────────────────────┤
 │              │  StatusBar                            │
 │              │  Model: mimo-v2.5-free · 42 messages  │
-│              ├──────────────────────────────────────┤
+│              ├───────────────────────────────────────┤
 │              │  InputBar                             │
-│              │  📁 ~/project ▾ [Browse] [+ New]     │
+│              │  📁 ~/project ▾ [Browse] [+ New]      │
 │              │  [📎] [Type message...]       [▶]    │
-│              │  [img1.png ✕]                        │
-└─────────────┴──────────────────────────────────────┘
+│              │  [img1.png ✕]                         │
+└──────────────┴───────────────────────────────────────┘
 ```
 
 ## How It Works
