@@ -90,6 +90,10 @@ export async function imageToBase64(path: string): Promise<string> {
   return invoke<string>("image_to_base64", { path });
 }
 
+export async function pickImageFiles(): Promise<AttachmentInfo[]> {
+  return invoke<AttachmentInfo[]>("pick_image_files");
+}
+
 export async function sendPrompt(
   text: string,
   images: string[],

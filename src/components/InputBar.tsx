@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ProjectFolderPicker } from "./ProjectFolderPicker";
 import { ModelSelector } from "./ModelSelector";
 import { ImageAttachment } from "./ImageAttachment";
+import { pickImageFiles } from "../lib/commands";
 import type { PendingAttachment } from "../lib/types";
 
 interface InputBarProps {
@@ -14,6 +15,7 @@ interface InputBarProps {
   onModelChange: (model: string | null) => void;
   pendingImages: PendingAttachment[];
   onAddImage: (file: File) => void;
+  onAddImagesFromPaths: (attachments: { filename: string; savedPath: string }[]) => void;
   onRemoveImage: (id: string) => void;
 }
 
@@ -26,11 +28,11 @@ export function InputBar({
   onModelChange,
   pendingImages,
   onAddImage,
+  onAddImagesFromPaths,
   onRemoveImage,
 }: InputBarProps) {
   const [text, setText] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSend = useCallback(() => {
     if (!text.trim() && pendingImages.length === 0) return;
@@ -61,22 +63,18 @@ export function InputBar({
     []
   );
 
-  const handleFileSelect = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const files = e.target.files;
-      if (files) {
-        for (const file of Array.from(files)) {
-          if (file.type.startsWith("image/")) {
-            onAddImage(file);
-          }
-        }
+  const handlePickFiles = useCallback(async () => {
+    try {
+      const attachments = await pickImageFiles();
+      onAddImagesFromPaths(
+        attachments.map((a) => ({ filename: a.filename, savedPath: a.path }))
+      );
+    } catch (err) {
+      if (err !== "File picker cancelled") {
+        console.error("Failed to pick files:", err);
       }
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-    },
-    [onAddImage]
-  );
+    }
+  }, [onAddImagesFromPaths]);
 
   const handlePaste = useCallback(
     (e: React.ClipboardEvent) => {
@@ -148,7 +146,7 @@ export function InputBar({
       <div className="px-4 pb-3">
         <div className="flex items-end gap-2 bg-[var(--input-bg)] rounded-xl border border-[var(--input-border)] px-3 py-2.5 transition-all focus-within:border-[var(--input-focus)] focus-within:shadow-[0_0_0_2px_color-mix(in_srgb,var(--accent)_15%,transparent)]">
           <motion.button
-            onClick={() => fileInputRef.current?.click()}
+            onClick={handlePickFiles}
             className="text-[var(--text-muted)] hover:text-[var(--accent)] text-lg shrink-0 mb-0.5 transition-colors"
             title="Attach image"
             whileHover={{ scale: 1.1 }}
@@ -200,15 +198,6 @@ export function InputBar({
             </motion.button>
           </AnimatePresence>
         </div>
-
-        <input
-          ref={fileInputRef}
-          type="file"
-          accept="image/*"
-          multiple
-          onChange={handleFileSelect}
-          className="hidden"
-        />
       </div>
     </div>
   );

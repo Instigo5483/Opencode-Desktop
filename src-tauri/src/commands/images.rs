@@ -1,6 +1,7 @@
 use crate::attachment::AttachmentManager;
 use crate::db::types::AttachmentInfo;
 use base64::Engine;
+use tauri_plugin_dialog::DialogExt;
 
 #[tauri::command]
 pub async fn save_image_attachment(
@@ -75,4 +76,40 @@ pub fn image_to_base64(path: String) -> Result<String, String> {
     };
 
     Ok(format!("data:{};base64,{}", mime, encoded))
+}
+
+#[tauri::command]
+pub async fn pick_image_files(app: tauri::AppHandle) -> Result<Vec<AttachmentInfo>, String> {
+    let manager = AttachmentManager::new(&app)?;
+
+    let files = app
+        .dialog()
+        .file()
+        .set_title("Select Images")
+        .add_filter(
+            "Images",
+            &[
+                "png", "jpg", "jpeg", "gif", "webp", "bmp", "svg", "tiff", "tif",
+            ],
+        )
+        .blocking_pick_files()
+        .ok_or("File picker cancelled")?;
+
+    let mut attachments = Vec::new();
+
+    for file_path in files {
+        let path_str = file_path.to_string();
+        let filename = std::path::Path::new(&path_str)
+            .file_name()
+            .map(|n| n.to_string_lossy().to_string())
+            .unwrap_or_else(|| "image.png".to_string());
+
+        let data =
+            std::fs::read(&path_str).map_err(|e| format!("Failed to read {}: {}", path_str, e))?;
+
+        let info = manager.save_image(&data, &filename)?;
+        attachments.push(info);
+    }
+
+    Ok(attachments)
 }

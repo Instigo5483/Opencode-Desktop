@@ -48,6 +48,7 @@ pub fn run() {
             commands::images::delete_attachment,
             commands::images::cleanup_old_attachments,
             commands::images::image_to_base64,
+            commands::images::pick_image_files,
             // Model commands
             commands::models::list_models,
             commands::models::get_current_model,
